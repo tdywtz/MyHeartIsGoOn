@@ -25,7 +25,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-   
+  
 //    CFDictionaryRef descriptorOptions = (__bridge CFDictionaryRef)@{(id)kCTFontDownloadableAttribute : @(YES)};
 //    CTFontDescriptorRef descriptor = CTFontDescriptorCreateWithAttributes((CFDictionaryRef)descriptorOptions);
 //    CFArrayRef fontDescriptors = CTFontDescriptorCreateMatchingFontDescriptors(descriptor, NULL);
@@ -58,9 +58,12 @@
         make.center.equalTo(CGPointZero);
         make.height.equalTo(40);
     }];
-
-    systemLabel = [[CZWLabel alloc] init];
- //    systemLabel.linesSpacing = 30;
+  
+    systemLabel = [[CZWLabel alloc] initWithFrame:CGRectMake(60, 60, 300, 500)];
+     systemLabel.linesSpacing = 3;
+    systemLabel.characterSpace = 3;
+    systemLabel.firstLineHeadIndent = 20;
+  //  systemLabel.numberOfLines = 5;
     [self.view addSubview:systemLabel];
     [systemLabel makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.equalTo(60);
@@ -68,14 +71,21 @@
     }];
     systemLabel.backgroundColor = [UIColor lightGrayColor];
     systemLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-    systemLabel.text = @"李慕白====http://12365auto.com天下去留肝胆两昆仑；刺青客店成追忆只是当时已惘然safd阿斯顿发生的方式是否俺是个打工的方式给第三个电饭锅阿大使馆的风格的水电费是功夫大使馆的风格的是否跟得上的风格";
+    systemLabel.text = @"李慕白====http://12365auto.com天下去留肝胆两昆仑；刺青客店成追忆只是当时已惘然safd阿斯顿发生的方式是否俺是个打工的方式给第三个电饭锅阿大使馆的风格的水电费是功夫大使馆的风格的是否跟得上的风格李慕白====http://12365auto.com天下去留肝胆两昆仑；刺青客店成追忆只是当时已惘然safd阿斯顿发生的方式是否俺是个打工的方式给第三个电饭锅阿大使馆的风格的水电费是功夫大使馆的风格的是否跟得上的风格李慕白====http://12365auto.com天下去留肝胆两昆仑；刺青客店成追忆只是当时已惘然safd阿斯顿发生sdaf的sdf方式是fda否俺是个打工的方式给第三个电饭锅阿大使馆的风格的水电费是功夫大使馆的风格的63598777";
+    
     NSRange range = [systemLabel rangeOfString:@"慕白"];
    
     [systemLabel insertImage:[UIImage imageNamed:@"钱"] size:CGSizeMake(80, 80) index:range.location];
-     range = [systemLabel rangeOfString:@"的风格"];
+    range = [systemLabel rangeOfString:@"63598777"];
+    [systemLabel addData:[[LHLinkStorage alloc] init] range:range];
+
+    range = [systemLabel rangeOfString:@"safd阿斯顿发生sdaf的sdf方式是fda否俺是"];
     [systemLabel addData:[[LHLinkStorage alloc] init] range:range];
      range = [systemLabel rangeOfString:@"http://12365auto.com"];
     [systemLabel addImage:[UIImage imageNamed:@"钱"] size:CGSizeMake(60, 60) range:range];
+       range = [systemLabel rangeOfString:@"的是否跟得上的风格李慕白====http://12365auto.com"];
+    [systemLabel addImage:[UIImage imageNamed:@"钱"] size:CGSizeMake(60, 60) range:range];
+  
        /*
      UIFontDescriptorFamilyAttribute：设置字体家族名
      UIFontDescriptorNameAttribute  ：设置字体的字体名

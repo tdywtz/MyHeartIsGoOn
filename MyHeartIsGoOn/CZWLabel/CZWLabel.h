@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+extern NSString *const kLHTextRunAttributedName;
+
 @interface CZWLabel : UILabel
 
 @property (nonatomic,strong) NSMutableAttributedString *attributeString;

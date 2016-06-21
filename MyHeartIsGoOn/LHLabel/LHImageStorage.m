@@ -9,6 +9,7 @@
 
 #import "LHImageStorage.h"
 #import <CoreText/CoreText.h>
+#import "CZWLabel.h"
 
 //CTRun的回调，销毁内存的回调
 void TYTextRunDelegateDeallocCallback( void* refCon ){
@@ -41,10 +42,10 @@ CGFloat TYTextRunDelegateGetWidthCallback(void *refCon){
 -(void)drawImageAttributeString:(NSMutableAttributedString *)attributeString{
     NSRange range  = self.range;
     
-//   // [attributeString replaceCharactersInRange:range withString:[self spaceReplaceString]];
-//    range = NSMakeRange(range.location, 1);
-//    self.range = range;
-    //为图片设置CTRunDelegate,delegate决定留给显示内容的空间大小
+    [attributeString replaceCharactersInRange:range withString:[self spaceReplaceString]];
+    range = NSMakeRange(range.location, 1);
+    self.range = range;
+   // 为图片设置CTRunDelegate,delegate决定留给显示内容的空间大小
     CTRunDelegateCallbacks runCallbacks;
     runCallbacks.version = kCTRunDelegateVersion1;
     runCallbacks.dealloc = TYTextRunDelegateDeallocCallback;
@@ -54,6 +55,7 @@ CGFloat TYTextRunDelegateGetWidthCallback(void *refCon){
     
     CTRunDelegateRef runDelegate = CTRunDelegateCreate(&runCallbacks, (__bridge void *)(self));
     [attributeString addAttribute:(__bridge_transfer NSString *)kCTRunDelegateAttributeName value:(__bridge id)runDelegate range:range];
+    [attributeString addAttribute:kLHTextRunAttributedName value:self range:range];
     CFRelease(runDelegate);
 
 }

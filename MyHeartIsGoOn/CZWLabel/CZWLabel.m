@@ -12,10 +12,42 @@
 #import "LHImageStorage.h"
 
 NSString *const kLHTextRunAttributedName = @"kLHTextRunAttributedName";
+static NSString* const kEllipsesCharacter = @"\u2026";
+
+static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstraints(CTFramesetterRef framesetter, NSAttributedString *attributedString, CGSize size, NSUInteger numberOfLines) {
+    
+    CFRange rangeToSize = CFRangeMake(0, (CFIndex)[attributedString length]);
+    CGSize constraints = CGSizeMake(size.width, CGFLOAT_MAX);
+    
+    if (numberOfLines > 0) {
+        // If the line count of the label more than 1, limit the range to size to the number of lines that have been set
+        CGMutablePathRef path = CGPathCreateMutable();
+        CGPathAddRect(path, NULL, CGRectMake(0.0f, 0.0f, constraints.width, CGFLOAT_MAX));
+        CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, 0), path, NULL);
+        CFArrayRef lines = CTFrameGetLines(frame);
+        
+        if (CFArrayGetCount(lines) > 0) {
+            NSInteger lastVisibleLineIndex = MIN((CFIndex)numberOfLines, CFArrayGetCount(lines)) - 1;
+            CTLineRef lastVisibleLine = CFArrayGetValueAtIndex(lines, lastVisibleLineIndex);
+            
+            CFRange rangeToLayout = CTLineGetStringRange(lastVisibleLine);
+            rangeToSize = CFRangeMake(0, rangeToLayout.location + rangeToLayout.length);
+        }
+        
+        CFRelease(frame);
+        CFRelease(path);
+    }
+    
+    CGSize suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, rangeToSize, NULL, constraints, NULL);
+    
+    return CGSizeMake(ceilf(suggestedSize.width), ceilf(suggestedSize.height));
+}
+
 
 @interface CZWLabel()<UIGestureRecognizerDelegate>
 {
     CTFrameRef _frameRef;
+    NSMutableAttributedString *_coreTextAttributedText;
 }
 @property (nonatomic,strong) NSMutableParagraphStyle *parapgStyle;
 @property (nonatomic, strong) NSDictionary  *runRectDictionary;  // runRect字典
@@ -25,6 +57,13 @@ NSString *const kLHTextRunAttributedName = @"kLHTextRunAttributedName";
 @end
 
 @implementation CZWLabel
+
+- (void)dealloc
+{
+    if (_frameRef) {
+         CFRelease(_frameRef);
+    }
+}
 
 - (instancetype)init
 {
@@ -99,18 +138,25 @@ NSString *const kLHTextRunAttributedName = @"kLHTextRunAttributedName";
   
     _attributeString = nil;
     [self addattributeName];
+    _coreTextAttributedText = [self.attributeString mutableCopy];
     self.attributedText = self.attributeString;
+}
+
+- (void)setFont:(UIFont *)font{
+    
+    [_coreTextAttributedText addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, _coreTextAttributedText.length)];
+    [super setFont:font];
 }
 
 
 #pragma mark -
--  (CTFrameRef)createFrameRefWithFramesetter:(CTFramesetterRef)framesetter textSize:(CGSize)textSize
+-  (CTFrameRef)createFrameRefWithFramesetter:(CTFramesetterRef)framesetter textSize:(CGSize)textSize attribute:(NSAttributedString *)attribute
 {
     // 这里你需要创建一个用于绘制文本的路径区域,通过 self.bounds 使用整个视图矩形区域创建 CGPath 引用。
     CGMutablePathRef path = CGPathCreateMutable();
     CGPathAddRect(path, NULL, CGRectMake(self.textInsets.left, self.textInsets.top, textSize.width, textSize.height));
     
-    CTFrameRef frameRef = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, [self.attributeString length]), path, NULL);
+    CTFrameRef frameRef = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, attribute.length), path, NULL);
     CFRelease(path);
     return frameRef;
 }
@@ -227,55 +273,164 @@ NSString *const kLHTextRunAttributedName = @"kLHTextRunAttributedName";
 -(CGSize)intrinsicContentSize{
     CGSize size = [super intrinsicContentSize];
     
-    NSAttributedString *att = self.attributedText;
+    NSMutableAttributedString *matt = [_coreTextAttributedText mutableCopy];
     if (self.lineBreakMode == NSLineBreakByTruncatingTail) {
-        NSMutableAttributedString *matt = [self.attributedText mutableCopy];
+       
         NSMutableParagraphStyle *style = [self.parapgStyle mutableCopy];
         style.lineBreakMode = NSLineBreakByWordWrapping;
-        [matt removeAttribute:NSParagraphStyleAttributeName range:NSMakeRange(0, matt.length)];
-        [matt addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(0, matt.length)];
-        att = matt;
+        style.lineSpacing = self.linesSpacing+1.2;
+        CTParagraphStyleRef ref = (__bridge CTParagraphStyleRef)style;
+        
+        
+        [matt removeAttribute:(id)kCTParagraphStyleAttributeName range:NSMakeRange(0, matt.length)];
+        [matt addAttribute:(id)kCTParagraphStyleAttributeName value:(id)ref range:NSMakeRange(0, matt.length)];
+     
     }
-    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)[att copy]);
+    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)matt);
     if (_frameRef) {
         CFRelease(_frameRef);
     }
-    _frameRef = [self createFrameRefWithFramesetter:framesetter textSize:size];
+    size = CTFramesetterSuggestFrameSizeForAttributedStringWithConstraints(framesetter, matt, CGSizeMake(size.width,CGFLOAT_MAX), (NSUInteger)self.numberOfLines);
+    _frameRef = [self createFrameRefWithFramesetter:framesetter textSize:size attribute:matt];
     [self saveTextStorageRectWithFrame:_frameRef];
     CFRelease(framesetter);
 
     return CGSizeMake(size.width+self.textInsets.left+self.textInsets.right, size.height+self.textInsets.top+self.textInsets.bottom);
 }
 
+#pragma mark = label
+
 - (void)drawTextInRect:(CGRect)rect{
     CGRect insetRect = UIEdgeInsetsInsetRect(rect, self.textInsets);
     
-   
-    [super drawTextInRect:insetRect];
+    if (!_frameRef) {
+        NSMutableAttributedString *matt = [_coreTextAttributedText mutableCopy];
+        if (self.lineBreakMode == NSLineBreakByTruncatingTail) {
+            
+            NSMutableParagraphStyle *style = [self.parapgStyle mutableCopy];
+            style.lineBreakMode = NSLineBreakByWordWrapping;
+            style.lineSpacing = self.linesSpacing+1.2;
+            CTParagraphStyleRef ref = (__bridge CTParagraphStyleRef)style;
+            
+            
+            [matt removeAttribute:(id)kCTParagraphStyleAttributeName range:NSMakeRange(0, matt.length)];
+            [matt addAttribute:(id)kCTParagraphStyleAttributeName value:(id)ref range:NSMakeRange(0, matt.length)];
+            
+        }
+        CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)matt);
+
+        _frameRef = [self createFrameRefWithFramesetter:framesetter textSize:insetRect.size attribute:matt];
+        [self saveTextStorageRectWithFrame:_frameRef];
+        CFRelease(framesetter);
+
+    }
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetTextMatrix(context, CGAffineTransformIdentity);
+    CGContextTranslateCTM(context, 0,rect.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
     
+
+   // [super drawTextInRect:insetRect];
+    // CTFrameDraw 将 frame 描述到设备上下文
+    [self drawText:self.attributeString frame:_frameRef rect:insetRect context:context];
+    // 画其他元素
     [self drawTextStorage:insetRect];
+    
+    CGContextTranslateCTM(context, 0, self.bounds.size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
 
 }
 
+// this code quote M80AttributedLabel
+- (void)drawText: (NSAttributedString *)attributedString
+           frame:(CTFrameRef)frame
+            rect: (CGRect)rect
+         context: (CGContextRef)context
+{
+    
+    if (self.numberOfLines > 0)
+    {
+        CFArrayRef lines = CTFrameGetLines(frame);
+        NSInteger numberOfLines = MIN(self.numberOfLines, CFArrayGetCount(lines));
+        
+        CGPoint lineOrigins[numberOfLines];
+        CTFrameGetLineOrigins(frame, CFRangeMake(0, numberOfLines), lineOrigins);
+        
+        BOOL truncateLastLine = (self.lineBreakMode == NSLineBreakByTruncatingTail);
+        
+        for (CFIndex lineIndex = 0; lineIndex < numberOfLines; lineIndex++)
+        {
+            CGPoint lineOrigin = lineOrigins[lineIndex];
+            CGContextSetTextPosition(context, lineOrigin.x+self.textInsets.left, lineOrigin.y+self.textInsets.top);
+            CTLineRef line = CFArrayGetValueAtIndex(lines, lineIndex);
+            
+            BOOL shouldDrawLine = YES;
+            if (lineIndex == numberOfLines - 1 && truncateLastLine)
+            {
+                // Does the last line need truncation?
+                
+                CFRange lastLineRange = CTLineGetStringRange(line);
+                
+                if (lastLineRange.location + lastLineRange.length < attributedString.length)
+                {
+                    CTLineTruncationType truncationType = kCTLineTruncationEnd;
+                    NSUInteger truncationAttributePosition = lastLineRange.location + lastLineRange.length - 1;
+                    
+                    NSDictionary *tokenAttributes = [attributedString attributesAtIndex:truncationAttributePosition effectiveRange:NULL];
+                    NSAttributedString *tokenString = [[NSAttributedString alloc] initWithString:kEllipsesCharacter attributes:tokenAttributes];
+                    CTLineRef truncationToken = CTLineCreateWithAttributedString((CFAttributedStringRef)tokenString);
+                    
+                    NSMutableAttributedString *truncationString = [[attributedString attributedSubstringFromRange:NSMakeRange(lastLineRange.location, lastLineRange.length)] mutableCopy];
+                    
+                    if (lastLineRange.length > 0)
+                    {
+                        // Remove last token
+                        [truncationString deleteCharactersInRange:NSMakeRange(lastLineRange.length - 1, 1)];
+                    }
+                    //[truncationString replaceCharactersInRange:NSMakeRange(lastLineRange.length-1, 1) withAttributedString:tokenString];
+                    [truncationString appendAttributedString:tokenString];
+                    
+                    
+                    CTLineRef truncationLine = CTLineCreateWithAttributedString((CFAttributedStringRef)truncationString);
+                    CTLineRef truncatedLine = CTLineCreateTruncatedLine(truncationLine, rect.size.width, truncationType, truncationToken);
+                    if (!truncatedLine)
+                    {
+                        // If the line is not as wide as the truncationToken, truncatedLine is NULL
+                        truncatedLine = CFRetain(truncationToken);
+                    }
+                    CFRelease(truncationLine);
+                    CFRelease(truncationToken);
+                    CTLineDraw(truncatedLine, context);
+                    CFRelease(truncatedLine);
+                    
+                    shouldDrawLine = NO;
+                }
+            }
+            if(shouldDrawLine)
+            {
+                CTLineDraw(line, context);
+            }
+        }
+    }
+    else
+    {
+        CTFrameDraw(frame,context);
+    }
+}
+
+
 - (void)drawTextStorage:(CGRect)rect
 {
-//    CGContextRef context = UIGraphicsGetCurrentContext();
-//    CGContextSetTextMatrix(context, CGAffineTransformIdentity);
-//    CGContextTranslateCTM(context, 0,rect.size.height);
-//    CGContextScaleCTM(context, 1.0, -1.0);
-//  //  CTFrameDraw(_frameRef, context);
-//    [_runRectDictionary enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, LHTextStorage * obj, BOOL * _Nonnull stop) {
-//        if ([obj isMemberOfClass:[LHImageStorage class]]) {
-//          
-//            CGRect frame = [key CGRectValue];
-//            CGContextDrawImage(context, frame, ((LHImageStorage *)obj).image.CGImage);
-////
-//        }
-//    }];
-    
-//        CGContextTranslateCTM(context, 0, self.bounds.size.height);
-//        CGContextScaleCTM(context, 1.0, -1.0);
+    [_runRectDictionary enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, LHTextStorage * obj, BOOL * _Nonnull stop) {
+        if ([obj isMemberOfClass:[LHImageStorage class]]) {
+          
+            CGRect frame = [key CGRectValue];
+            CGContextRef context = UIGraphicsGetCurrentContext();
+            CGContextDrawImage(context, frame, ((LHImageStorage *)obj).image.CGImage);
 
+        }
+    }];
+    
 }
 
 -(void)addColor:(UIColor *)color range:(NSRange)range{
@@ -286,16 +441,20 @@ NSString *const kLHTextRunAttributedName = @"kLHTextRunAttributedName";
 
 - (void)insertImage:(UIImage *)image size:(CGSize)size index:(NSInteger)index{
     NSTextAttachment *achment = [[NSTextAttachment alloc] init];
-   // achment.image = image;
+    achment.image = image;
     achment.bounds = CGRectMake(0, 0, size.width, size.height);
     NSAttributedString *att = [NSAttributedString attributedStringWithAttachment:achment];
     [self.attributeString insertAttributedString:att atIndex:index];
+  
     LHImageStorage *storage = [[LHImageStorage alloc] init];
     storage.range = NSMakeRange(index, 1);
     storage.imageSize = size;
     storage.image = image;
-    [self.attributeString addAttribute:kLHTextRunAttributedName value:storage range:NSMakeRange(index, 1)];
-    [storage drawImageAttributeString:self.attributeString];
+    [_coreTextAttributedText insertAttributedString:[[NSAttributedString alloc] initWithString:@"5"] atIndex:index];
+    [_coreTextAttributedText removeAttribute:kLHTextRunAttributedName range:NSMakeRange(index, 1)];
+    [_coreTextAttributedText addAttribute:kLHTextRunAttributedName value:storage range:NSMakeRange(index, 1)];
+    [storage drawImageAttributeString:_coreTextAttributedText];
+    
      self.attributedText = self.attributeString;
 
 }
@@ -306,20 +465,26 @@ NSString *const kLHTextRunAttributedName = @"kLHTextRunAttributedName";
     achment.bounds = CGRectMake(0, 0, size.width, size.height);
     NSAttributedString *att = [NSAttributedString attributedStringWithAttachment:achment];
     [self.attributeString replaceCharactersInRange:range withAttributedString:att];
+  
     LHImageStorage *storage = [[LHImageStorage alloc] init];
-    storage.range = NSMakeRange(range.location, 1);
+    storage.range = range;
     storage.imageSize = size;
     storage.image = image;
-    [self.attributeString addAttribute:kLHTextRunAttributedName value:storage range:NSMakeRange(range.location, 1)];
-    [storage drawImageAttributeString:self.attributeString];
+    [storage drawImageAttributeString:_coreTextAttributedText];
 
     self.attributedText = self.attributeString;
-    NSLog(@"%@",self.attributedText);
 }
 
 - (void)addData:(id)data range:(NSRange)range{
-    [self.attributeString addAttribute:kLHTextRunAttributedName value:data range:range];
+  
     [self.attributeString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:range];
+    
+    LHTextStorage *storage = [[LHTextStorage alloc] init];
+    storage.data = data;
+    
+    [_coreTextAttributedText addAttribute:kLHTextRunAttributedName value:storage range:range];
+    [_coreTextAttributedText addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:range];
+    
     self.attributedText = self.attributeString;
 }
 
