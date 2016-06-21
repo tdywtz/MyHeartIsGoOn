@@ -41,27 +41,42 @@
 //    _dataArray = [UIFont familyNames];
 //    [self.tableView reloadData];
     
-    if (![LHTextStorage isFontDownloaded:@"DFWaWaSC-W5"]) {
-        [LHTextStorage setup:@"DFWaWaSC-W5"];
-    }
-    label = [[LHLabel alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+//    if (![LHTextStorage isFontDownloaded:@"DFWaWaSC-W5"]) {
+//        [LHTextStorage setup:@"DFWaWaSC-W5"];
+//    }
+    label = [[LHLabel alloc] init];
     label.preferredMaxLayoutWidth = 300;
     //  label.textInsets = UIEdgeInsetsMake(40, 10, 10, 80);
     label.paragraphSpacing = 10;
+   // label.lineSpacing = 20;
      label.backgroundColor = [UIColor lightGrayColor];
-
+    label.lineBreakMode = NSLineBreakByTruncatingTail;
+    
     [self.view addSubview:label];
     
     [label makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(CGPointZero);
+        make.height.equalTo(40);
     }];
 
-    systemLabel = [[CZWLabel alloc] initWithFrame:CGRectMake(0, 0, 300, 100)];
+    systemLabel = [[CZWLabel alloc] init];
+ //    systemLabel.linesSpacing = 30;
     [self.view addSubview:systemLabel];
-    systemLabel.text = @"李慕白====http://12365auto.com天下去留肝胆两昆仑；刺青客店成追忆只是当时已惘然";
-    [systemLabel insertImage:[UIImage imageNamed:@"钱"] size:CGSizeMake(60, 60) index:10];
-    
-    /*
+    [systemLabel makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.equalTo(60);
+        make.width.equalTo(300);
+    }];
+    systemLabel.backgroundColor = [UIColor lightGrayColor];
+    systemLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    systemLabel.text = @"李慕白====http://12365auto.com天下去留肝胆两昆仑；刺青客店成追忆只是当时已惘然safd阿斯顿发生的方式是否俺是个打工的方式给第三个电饭锅阿大使馆的风格的水电费是功夫大使馆的风格的是否跟得上的风格";
+    NSRange range = [systemLabel rangeOfString:@"慕白"];
+   
+    [systemLabel insertImage:[UIImage imageNamed:@"钱"] size:CGSizeMake(80, 80) index:range.location];
+     range = [systemLabel rangeOfString:@"的风格"];
+    [systemLabel addData:[[LHLinkStorage alloc] init] range:range];
+     range = [systemLabel rangeOfString:@"http://12365auto.com"];
+    [systemLabel addImage:[UIImage imageNamed:@"钱"] size:CGSizeMake(60, 60) range:range];
+       /*
      UIFontDescriptorFamilyAttribute：设置字体家族名
      UIFontDescriptorNameAttribute  ：设置字体的字体名
      UIFontDescriptorSizeAttribute  ：设置字体尺寸
@@ -75,23 +90,19 @@
 //                                                                                    ]*/}];
 //    systemLabel.font = [UIFont fontWithDescriptor:attributeFontDescriptor size:0.0];
 //     NSLog(@"%@", [UIFont fontWithName:@"DFWaWaSC-W5" size:15]);
+//    
+//    label.text = @"李慕白====http://12365auto.com天下去留肝胆两昆仑；刺青客店成追忆只是当时已惘然";
+//    [label addLinkData:@{@"李慕白":@"李慕白"} rangeOfString:@"李慕白"];
+//    
+//    
+//    UIButton *btn = [UIButton buttonWithType:UIButtonTypeContactAdd];
+//    btn.backgroundColor = [UIColor grayColor];
+//   // [btn addTarget:self action:@selector(btn) forControlEvents:UIControlEventTouchUpInside];
+//    [label addView:btn size:CGSizeMake(40, 20) rangeOfString:@"只是"];
+//    [label addLinkData:@{@"李慕12365auto.com":@"李12365auto.com白"} rangeOfString:@"惘然"];
+//    [label addImage:[UIImage imageNamed:@"钱"] data:@{} size: CGSizeMake(30, 30) rangeOfString:@"肝胆两昆仑"];
     
-    label.text = @"李慕白====http://12365auto.com天下去留肝胆两昆仑；刺青客店成追忆只是当时已惘然";
-    
-    
-    [label addLinkData:@{@"李慕白":@"李慕白"} rangeOfString:@"李慕白"];
-    
-    [label addLinkData:@{@"李慕12365auto.com":@"李12365auto.com白"} rangeOfString:@"惘然"];
-    
-    
-    [label addImage:[UIImage imageNamed:@"钱"] data:@{} size: CGSizeMake(30, 30) rangeOfString:@"留肝胆两昆"];
-    
-    UIButton *btn = [UIButton buttonWithType:UIButtonTypeContactAdd];
-   // [btn addTarget:self action:@selector(btn) forControlEvents:UIControlEventTouchUpInside];
-    [label addView:btn size:CGSizeMake(80, 20) rangeOfString:@"只是"];
-    
-  
-  [self asynchronouslySetFontName:@"STXingkai-SC-Bold"];
+   // [self asynchronouslySetFontName:@"STXingkai-SC-Bold"];
 }
 
 - (void)didReceiveMemoryWarning {

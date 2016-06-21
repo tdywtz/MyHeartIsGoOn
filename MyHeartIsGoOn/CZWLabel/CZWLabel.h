@@ -35,4 +35,7 @@
 - (void)insertImage:(UIImage *)image size:(CGSize)size index:(NSInteger)index;
 - (void)addImage:(UIImage *)image size:(CGSize)size range:(NSRange)range;
 
+- (void)addData:(id)data range:(NSRange)range;
+
+- (NSRange)rangeOfString:(NSString *)string;
 @end

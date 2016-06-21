@@ -54,12 +54,6 @@ CGFloat LHTextRunDelegateGetWidthCallback(void *refCon){
     CTRunDelegateRef runDelegate = CTRunDelegateCreate(&runCallbacks, (__bridge void *)(self));
     [attributeString addAttribute:(__bridge_transfer NSString *)kCTRunDelegateAttributeName value:(__bridge id)runDelegate range:range];
     CFRelease(runDelegate);
-    
-//    [attributeString enumerateAttributesInRange:NSMakeRange(0, attributeString.length) options:NSAttributedStringEnumerationReverse usingBlock:^(NSDictionary<NSString *,id> * _Nonnull attrs, NSRange range, BOOL * _Nonnull stop) {
-//        
-//        //NSLog(@"%ld,%ld",range.location,range.length);
-//    }];
-//    
 }
 
 - (NSString *)spaceReplaceString

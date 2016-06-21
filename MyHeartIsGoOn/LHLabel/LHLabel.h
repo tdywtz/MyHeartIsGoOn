@@ -14,7 +14,8 @@
 @interface LHLabel : UIView
 
 @property (nonatomic,copy)   NSString                  *text;
-@property (nonatomic,strong) NSMutableAttributedString *attributeString;
+@property (nonatomic,strong) NSAttributedString        *attributedText;
+
 @property (nonatomic,strong) UIColor                   *textColor;
 @property (nonatomic,strong) UIFont                    *font;
 

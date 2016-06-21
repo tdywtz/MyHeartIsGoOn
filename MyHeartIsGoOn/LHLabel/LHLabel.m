@@ -78,6 +78,7 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
 @property (nonatomic,strong) NSMutableParagraphStyle *parapgStyle;
 @property (nonatomic,assign) CTFrameRef frameRef;
 @property (nonatomic,strong) NSMutableArray <__kindof LHTextStorage *> *storageArray;
+@property (nonatomic,strong) NSMutableAttributedString *attributeString;
 
 @property (nonatomic, strong) NSDictionary  *runRectDictionary;  // runRect字典
 @property (nonatomic, strong) NSDictionary  *linkRectDictionary; // linkRect字典
@@ -200,6 +201,8 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
     [self setNeedsDisplay];
     [self invalidateIntrinsicContentSize];
 }
+
+
 - (void)setTextInsets:(UIEdgeInsets)textInsets{
     _textInsets = UIEdgeInsetsMake(textInsets.bottom, textInsets.left, textInsets.top, textInsets.right);
 }
@@ -253,7 +256,7 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
 
 - (CGSize)intrinsicContentSize
 {
-    NSLog(@"f888d");
+ 
     return [self getSize];
 }
 
@@ -481,7 +484,7 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
 
 #pragma mark -  drawRect
 -(void)drawRect:(CGRect)rect{
-  
+    NSLog(@"dfas");
    CGRect insetRect = UIEdgeInsetsInsetRect(rect, self.textInsets);
     //[self.attributeString drawInRect:rect];
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -672,6 +675,7 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
             CGRect frame = [key CGRectValue];
             CGContextRef context = UIGraphicsGetCurrentContext();
             CGContextDrawImage(context, frame, ((LHImageStorage *)obj).image.CGImage);
+            
         }else if ([obj isMemberOfClass:[LHDrawView class]]){
              CGRect frame = [key CGRectValue];
             frame.origin.y = rect.size.height-frame.origin.y-frame.size.height;
@@ -777,9 +781,9 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
  
     [_storageArray addObject:storage];
     [self.attributeString addAttribute:KLHTextRunAttributedName value:storage range:storage.range];
+    NSLog(@"ay");
     [self setNeedsDisplay];
     [self invalidateIntrinsicContentSize];
-
 }
 
 
