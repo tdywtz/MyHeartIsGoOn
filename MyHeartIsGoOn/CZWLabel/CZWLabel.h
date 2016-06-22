@@ -21,7 +21,7 @@ extern NSString *const kLHTextRunAttributedName;
 
 //段落样式
 /**行距*/
-@property (nonatomic,assign) CGFloat         linesSpacing;
+@property (nonatomic,assign) CGFloat        linesSpacing;
 /**段落距离*/
 @property(nonatomic,assign) CGFloat         paragraphSpacing;
 /** 段落首行距离左边长度*/

@@ -11,7 +11,32 @@
 #import "CZWLabel.h"
 //#import "LHTextStorage.h"
 #import <CoreText/CoreText.h>
-@interface ViewController ()
+
+@interface MyCwll : UITableViewCell
+
+@property (nonatomic,strong) CZWLabel *contentLabel;
+@end
+
+@implementation MyCwll
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+        _contentLabel = [[CZWLabel alloc] init];
+        _contentLabel.textInsets = UIEdgeInsetsMake(30, 30, 30, 30);
+        _contentLabel.backgroundColor = [UIColor lightGrayColor];
+        [self.contentView addSubview:_contentLabel];
+        
+        [_contentLabel makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(UIEdgeInsetsZero);
+        }];
+    }
+    return self;
+}
+
+@end
+
+
+@interface ViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     CZWLabel *systemLabel;
     LHLabel *label;
@@ -31,13 +56,15 @@
 //    CFArrayRef fontDescriptors = CTFontDescriptorCreateMatchingFontDescriptors(descriptor, NULL);
 //    NSArray *arr = (__bridge_transfer  NSArray *)fontDescriptors;
 //    NSLog(@"%@",arr);
-//    self.tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
-//    self.tableView.delegate = self;
-//    self.tableView.dataSource = self;
-//    self.tableView.estimatedRowHeight = 100;
-//    [self.view addSubview:self.tableView];
-//    
-//    
+    self.tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.estimatedRowHeight = 100;
+    [self.view addSubview:self.tableView];
+    
+    
+    return;
+//
 //    _dataArray = [UIFont familyNames];
 //    [self.tableView reloadData];
     
@@ -112,7 +139,56 @@
 //    [label addLinkData:@{@"李慕12365auto.com":@"李12365auto.com白"} rangeOfString:@"惘然"];
 //    [label addImage:[UIImage imageNamed:@"钱"] data:@{} size: CGSizeMake(30, 30) rangeOfString:@"肝胆两昆仑"];
     
-   // [self asynchronouslySetFontName:@"STXingkai-SC-Bold"];
+    [self asynchronouslySetFontName:@"STXingkai-SC-Bold"];
+    
+  
+}
+
+#pragma mark - UITableViewDataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 4;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    
+    return 3;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
+    MyCwll *cell = [tableView dequeueReusableCellWithIdentifier:@"iconCell"];
+    if (!cell) {
+        cell = [[MyCwll alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"iconCell"];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+       
+    }
+    cell.contentLabel.text = @"李慕白====http://12365auto.com天下去留肝胆两昆仑；刺青客店成追忆只是当时已惘然safd阿斯顿发生的方式是否俺是个打工的方式给第三个电饭锅阿大使馆的风格的水电费是功夫大使馆的风格的是否跟得上的风格李慕白====http://12365auto.com天下去留肝胆两昆仑；刺青客店成追忆只是当时已惘然safd阿斯顿发生的方式是否俺是个打工的方式给第三个电饭锅阿大使馆的风格的水电费是功夫大使馆的风格的是否跟得上的风格李慕白====http://12365auto.com天下去留肝胆两昆仑；刺青客店成追忆只是当时已惘然safd阿斯顿发生sdaf的sdf方式是fda否俺是个打工的方式给第三个电饭锅阿大使馆的风格的水电费是功夫大使馆的风格的63598777";
+    if ([UIFont fontWithName:@"STXingkai-SC-Bold" size:19]) {
+         cell.contentLabel.font = [UIFont fontWithName:@"STXingkai-SC-Bold" size:19];
+    }
+   
+    NSRange range = [cell.contentLabel rangeOfString:@"慕白"];
+    
+    [cell.contentLabel insertImage:[UIImage imageNamed:@"钱"] size:CGSizeMake(80, 80) index:range.location];
+    range = [cell.contentLabel rangeOfString:@"63598777"];
+    [cell.contentLabel addData:[[LHLinkStorage alloc] init] range:range];
+    
+    range = [cell.contentLabel rangeOfString:@"safd阿斯顿发生sdaf的sdf方式是fda否俺是"];
+    [cell.contentLabel addData:[[LHLinkStorage alloc] init] range:range];
+    range = [cell.contentLabel rangeOfString:@"http://12365auto.com"];
+    [cell.contentLabel addImage:[UIImage imageNamed:@"钱"] size:CGSizeMake(60, 60) range:range];
+    range = [cell.contentLabel rangeOfString:@"的是否跟得上的风格李慕白====http://12365auto.com"];
+    [cell.contentLabel addImage:[UIImage imageNamed:@"钱"] size:CGSizeMake(60, 60) range:range];
+    
+    return cell;
+    
+}
+
+#pragma mark - UITableViewDelegate
+-(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 100;
 }
 
 - (void)didReceiveMemoryWarning {

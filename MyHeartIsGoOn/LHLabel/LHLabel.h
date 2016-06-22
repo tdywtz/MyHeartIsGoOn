@@ -36,7 +36,7 @@
 /**行距*/
 @property (nonatomic,assign)    CGFloat         lineSpacing;
 /**段落距离*/
-@property(NS_NONATOMIC_IOSONLY) CGFloat         paragraphSpacing;
+@property (nonatomic,assign)    CGFloat         paragraphSpacing;
 /**对其方式*/
 @property(NS_NONATOMIC_IOSONLY) NSTextAlignment alignment;
 /** 段落首行距离左边长度*/

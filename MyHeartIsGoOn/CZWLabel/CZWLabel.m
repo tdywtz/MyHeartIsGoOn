@@ -81,6 +81,7 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
     return  self;
 }
 
+
 -(void)setUp{
     self.numberOfLines = 0;
     self.lineBreakMode = NSLineBreakByCharWrapping;
@@ -290,7 +291,7 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
     if (_frameRef) {
         CFRelease(_frameRef);
     }
-    size = CTFramesetterSuggestFrameSizeForAttributedStringWithConstraints(framesetter, matt, CGSizeMake(size.width,CGFLOAT_MAX), (NSUInteger)self.numberOfLines);
+    size = CTFramesetterSuggestFrameSizeForAttributedStringWithConstraints(framesetter, matt, CGSizeMake(size.width-self.textInsets.left-self.textInsets.right,CGFLOAT_MAX), (NSUInteger)self.numberOfLines);
     _frameRef = [self createFrameRefWithFramesetter:framesetter textSize:size attribute:matt];
     [self saveTextStorageRectWithFrame:_frameRef];
     CFRelease(framesetter);
