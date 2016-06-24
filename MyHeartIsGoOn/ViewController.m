@@ -11,6 +11,7 @@
 #import "CZWLabel.h"
 //#import "LHTextStorage.h"
 #import <CoreText/CoreText.h>
+#import "MyHeartIsGoOn-swift.h"
 
 @interface MyCwll : UITableViewCell
 
@@ -30,6 +31,8 @@
             make.edges.equalTo(UIEdgeInsetsZero);
         }];
     }
+    
+    
     return self;
 }
 
@@ -62,6 +65,8 @@
     self.tableView.estimatedRowHeight = 100;
     [self.view addSubview:self.tableView];
     
+    OOViewController *vc = [[OOViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
     
     return;
 //

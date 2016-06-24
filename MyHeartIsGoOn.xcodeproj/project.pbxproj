@@ -18,6 +18,9 @@
 		4D04D1E91CE992E900890140 /* MyHeartIsGoOnUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D04D1E81CE992E900890140 /* MyHeartIsGoOnUITests.m */; };
 		4D1CCB841CEDB39B007AC311 /* 钱.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D1CCB831CEDB39B007AC311 /* 钱.png */; };
 		4D1CCB861CEDB4BF007AC311 /* 首页640-960.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D1CCB851CEDB4BF007AC311 /* 首页640-960.png */; };
+		4D3D24661D1B827C007ECF44 /* MyLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3D24651D1B827C007ECF44 /* MyLabel.swift */; };
+		4D3D24681D1B829F007ECF44 /* FFF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3D24671D1B829F007ECF44 /* FFF.swift */; };
+		4D3D246A1D1B856F007ECF44 /* OOViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3D24691D1B856F007ECF44 /* OOViewController.swift */; };
 		4DE011D21D08119A003A3681 /* LHImageStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DE011CB1D08119A003A3681 /* LHImageStorage.m */; };
 		4DE011D31D08119A003A3681 /* LHLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DE011CD1D08119A003A3681 /* LHLabel.m */; };
 		4DE011D41D08119A003A3681 /* LHLinkStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DE011CF1D08119A003A3681 /* LHLinkStorage.m */; };
@@ -191,6 +194,10 @@
 		4D1CCB7F1CED4EFC007AC311 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		4D1CCB831CEDB39B007AC311 /* 钱.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "钱.png"; sourceTree = "<group>"; };
 		4D1CCB851CEDB4BF007AC311 /* 首页640-960.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "首页640-960.png"; sourceTree = "<group>"; };
+		4D3D24641D1B827C007ECF44 /* MyHeartIsGoOn-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyHeartIsGoOn-Bridging-Header.h"; sourceTree = "<group>"; };
+		4D3D24651D1B827C007ECF44 /* MyLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyLabel.swift; sourceTree = "<group>"; };
+		4D3D24671D1B829F007ECF44 /* FFF.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFF.swift; sourceTree = "<group>"; };
+		4D3D24691D1B856F007ECF44 /* OOViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OOViewController.swift; sourceTree = "<group>"; };
 		4DE011CA1D08119A003A3681 /* LHImageStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LHImageStorage.h; sourceTree = "<group>"; };
 		4DE011CB1D08119A003A3681 /* LHImageStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LHImageStorage.m; sourceTree = "<group>"; };
 		4DE011CC1D08119A003A3681 /* LHLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LHLabel.h; sourceTree = "<group>"; };
@@ -603,6 +610,9 @@
 				4D04D1C71CE992E800890140 /* AppDelegate.m */,
 				4D04D1C91CE992E800890140 /* ViewController.h */,
 				4D04D1CA1CE992E800890140 /* ViewController.m */,
+				4D3D24651D1B827C007ECF44 /* MyLabel.swift */,
+				4D3D24691D1B856F007ECF44 /* OOViewController.swift */,
+				4D3D24671D1B829F007ECF44 /* FFF.swift */,
 				4DE326A01D128C8F00A8956A /* CZWLabel */,
 				4D04B7541D016B8C00D1DB97 /* websocketpp */,
 				4D04B7061D016B2000D1DB97 /* rapidjson */,
@@ -614,6 +624,7 @@
 				4D04D1D41CE992E800890140 /* Info.plist */,
 				4D1CCB7F1CED4EFC007AC311 /* PrefixHeader.pch */,
 				4D04D1C31CE992E800890140 /* Supporting Files */,
+				4D3D24641D1B827C007ECF44 /* MyHeartIsGoOn-Bridging-Header.h */,
 			);
 			path = MyHeartIsGoOn;
 			sourceTree = "<group>";
@@ -873,10 +884,13 @@
 			files = (
 				4DE011D31D08119A003A3681 /* LHLabel.m in Sources */,
 				4DE326A31D128C8F00A8956A /* CZWLabel.m in Sources */,
+				4D3D246A1D1B856F007ECF44 /* OOViewController.swift in Sources */,
 				4D04D1CB1CE992E800890140 /* ViewController.m in Sources */,
 				4D04D1C81CE992E800890140 /* AppDelegate.m in Sources */,
 				4DE011D41D08119A003A3681 /* LHLinkStorage.m in Sources */,
 				4DE3269D1D1268D700A8956A /* LHDrawView.m in Sources */,
+				4D3D24661D1B827C007ECF44 /* MyLabel.swift in Sources */,
+				4D3D24681D1B829F007ECF44 /* FFF.swift in Sources */,
 				4D04D1C51CE992E800890140 /* main.m in Sources */,
 				4DE011D51D08119A003A3681 /* LHTextStorage.m in Sources */,
 				4DE011D21D08119A003A3681 /* LHImageStorage.m in Sources */,
@@ -1019,11 +1033,14 @@
 			baseConfigurationReference = 8F4CB5CE1B7F15DB7983D59E /* Pods-MyHeartIsGoOn.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/MyHeartIsGoOn/PrefixHeader.pch";
 				INFOPLIST_FILE = MyHeartIsGoOn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.12365auto.MyHeartIsGoOn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "MyHeartIsGoOn/MyHeartIsGoOn-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -1032,11 +1049,13 @@
 			baseConfigurationReference = 065E82EF6519DE2C9DC32F9B /* Pods-MyHeartIsGoOn.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/MyHeartIsGoOn/PrefixHeader.pch";
 				INFOPLIST_FILE = MyHeartIsGoOn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.12365auto.MyHeartIsGoOn;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "MyHeartIsGoOn/MyHeartIsGoOn-Bridging-Header.h";
 			};
 			name = Release;
 		};
