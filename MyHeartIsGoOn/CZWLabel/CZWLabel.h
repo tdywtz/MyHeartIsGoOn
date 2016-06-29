@@ -33,6 +33,7 @@ extern NSString *const kLHTextRunAttributedName;
 /**段落前空白距离*/
 @property(nonatomic,assign) CGFloat         paragraphSpacingBefore;
 
+
 - (void)addColor:(UIColor *)color range:(NSRange)range;
 - (void)insertImage:(UIImage *)image size:(CGSize)size index:(NSInteger)index;
 - (void)addImage:(UIImage *)image size:(CGSize)size range:(NSRange)range;

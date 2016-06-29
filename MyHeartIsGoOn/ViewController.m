@@ -53,22 +53,27 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-  
+
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//         [self presentViewController:[[OOViewController alloc] init] animated:YES completion:nil];
+//    });
+//   
+//    return;
 //    CFDictionaryRef descriptorOptions = (__bridge CFDictionaryRef)@{(id)kCTFontDownloadableAttribute : @(YES)};
 //    CTFontDescriptorRef descriptor = CTFontDescriptorCreateWithAttributes((CFDictionaryRef)descriptorOptions);
 //    CFArrayRef fontDescriptors = CTFontDescriptorCreateMatchingFontDescriptors(descriptor, NULL);
 //    NSArray *arr = (__bridge_transfer  NSArray *)fontDescriptors;
 //    NSLog(@"%@",arr);
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    self.tableView.estimatedRowHeight = 100;
-    [self.view addSubview:self.tableView];
-    
-    OOViewController *vc = [[OOViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
-    
-    return;
+//    self.tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
+//    self.tableView.delegate = self;
+//    self.tableView.dataSource = self;
+//    self.tableView.estimatedRowHeight = 100;
+//    [self.view addSubview:self.tableView];
+//    
+//    OOViewController *vc = [[OOViewController alloc] init];
+//    [self.navigationController pushViewController:vc animated:YES];
+//    
+//    return;
 //
 //    _dataArray = [UIFont familyNames];
 //    [self.tableView reloadData];

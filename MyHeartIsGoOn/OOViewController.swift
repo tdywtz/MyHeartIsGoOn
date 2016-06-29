@@ -10,13 +10,21 @@ import UIKit
 
 class OOViewController: UIViewController {
 
+    internal var label: CZWLabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-   
-        // Do any additional setup after loading the view.
-        let label = LHLabel.init(frame: CGRectMake(100, 100, 100, 100))
-        label.
+   self.view.backgroundColor = UIColor.whiteColor()
+//        // Do any additional setup after loading the view.
+//        let label = LHLabel.init(frame: CGRectMake(100, 100, 100, 100))
+//        self.view.addSubview(label)
+        
+        label = CZWLabel.init(frame: CGRectMake(100, 100, 100, 100))
+        label.text = "kashdgfiad\nasdfljdklagjhiegrhasldkjgfadgij\nasidhfdaklhg"
         self.view.addSubview(label)
+        label.addImage(UIImage.init(named: "钱") , size: CGSizeMake(60, 60), range: label.rangeOfString("ash"))
+        
+        
     }
 
     override func didReceiveMemoryWarning() {

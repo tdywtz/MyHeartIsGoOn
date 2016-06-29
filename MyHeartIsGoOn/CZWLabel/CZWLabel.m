@@ -251,6 +251,7 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
 #pragma mark - add
 -(void)addattributeName{
     [_attributeString beginEditing];
+    
     NSRange range = NSMakeRange(0, self.attributeString.length);
     [self.attributeString addAttribute:NSForegroundColorAttributeName value:self.textColor range:range];
     [self.attributeString addAttribute:NSFontAttributeName value:self.font range:range];
